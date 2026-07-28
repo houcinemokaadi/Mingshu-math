@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Les Angles — 1ère secondaire</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --void:#0a0e1c;
+    --panel:#111830;
+    --panel-2:#151d38;
+    --line:#2a3356;
+    --gold:#d9b46a;
+    --teal:#4fd1c0;
+    --coral:#ff7a63;
+    --lilac:#b79ee8;
+    --text:#edeef5;
+    --text-dim:#9aa3c0;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:var(--void);
+    background-image:
+      radial-gradient(circle at 15% 10%, rgba(217,180,106,0.07), transparent 40%),
+      radial-gradient(circle at 85% 30%, rgba(79,209,192,0.06), transparent 45%);
+    color:var(--text);
+    font-family:'Work Sans', sans-serif;
+    line-height:1.6;
+    padding-bottom:60px;
+  }
+  h1,h2,h3{font-family:'Fraunces', serif; font-weight:600;}
+  .wrap{max-width:920px; margin:0 auto; padding:0 20px;}
+
+  /* HERO */
+  .hero{
+    padding:50px 20px 40px;
+    text-align:center;
+    border-bottom:1px solid var(--line);
+  }
+  .eyebrow{
+    letter-spacing:.18em; text-transform:uppercase; font-size:.72rem;
+    color:var(--teal); font-weight:600;
+  }
+  .hero h1{
+    font-size:clamp(2.2rem, 7vw, 3.4rem);
+    margin:10px 0 6px;
+    background:linear-gradient(90deg, var(--gold), var(--lilac));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .hero p{color:var(--text-dim); font-size:1.02rem; max-width:520px; margin:0 auto;}
+
+  /* SIGNATURE: interactive protractor */
+  .protractor-box{
+    margin:34px auto 0; max-width:420px;
+    background:var(--panel); border:1px solid var(--line); border-radius:18px;
+    padding:22px 18px 18px;
+  }
+  #proSvg{width:100%; height:auto; touch-action:none;}
+  .proReadout{display:flex; justify-content:center; align-items:baseline; gap:10px; margin-top:8px;}
+  .proReadout .deg{font-family:'Fraunces',serif; font-size:2.2rem; color:var(--gold);}
+  .badge{
+    display:inline-block; padding:4px 14px; border-radius:999px; font-size:.82rem; font-weight:600;
+    border:1px solid currentColor;
+  }
+  .hint{color:var(--text-dim); font-size:.8rem; margin-top:10px;}
+
+  /* SECTIONS */
+  section{padding:44px 20px;}
+  .sec-head{display:flex; align-items:center; gap:12px; margin-bottom:18px;}
+  .sec-dot{width:10px; height:10px; border-radius:50%; flex:none;}
+  .sec-head h2{font-size:1.5rem;}
+
+  .card{
+    background:var(--panel); border:1px solid var(--line); border-radius:16px;
+    padding:20px 22px; margin-bottom:14px;
+  }
+  .card p{color:var(--text-dim);}
+  .card strong{color:var(--text);}
+
+  /* Table des critères */
+  table{width:100%; border-collapse:collapse; font-size:.95rem;}
+  th{
+    text-align:right; color:var(--teal); font-weight:600; padding:10px 8px;
+    border-bottom:1px solid var(--line); font-size:.82rem; text-transform:uppercase; letter-spacing:.06em;
+  }
+  td{padding:12px 8px; border-bottom:1px solid var(--line); vertical-align:middle;}
+  .mini-angle{display:inline-block; vertical-align:middle; margin-left:8px;}
+
+  /* Grid 2 cols */
+  .grid2{display:grid; grid-template-columns:1fr; gap:14px;}
+  @media(min-width:640px){ .grid2{grid-template-columns:1fr 1fr;} }
+
+  .prop-name{color:var(--gold); font-weight:600; font-family:'Fraunces',serif; font-size:1.05rem; margin-bottom:6px;}
+
+  /* Complement/Supplement tool */
+  .tool input[type=range]{width:100%; accent-color:var(--teal);}
+  .tool-out{display:flex; gap:14px; flex-wrap:wrap; margin-top:12px;}
+  .tool-out .chip{
+    background:var(--panel-2); border:1px solid var(--line); border-radius:10px;
+    padding:10px 14px; flex:1; min-width:130px;
+  }
+  .tool-out .chip .lab{font-size:.72rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:.06em;}
+  .tool-out .chip .val{font-family:'Fraunces',serif; font-size:1.3rem; color:var(--text);}
+
+  /* Bisector interactive */
+  #bisSvg{width:100%; max-width:360px; display:block; margin:0 auto; touch-action:none;}
+  .bis-feedback{text-align:center; margin-top:8px; font-weight:600;}
+
+  /* Exercise */
+  .exo-box{
+    background:linear-gradient(135deg, rgba(217,180,106,0.10), rgba(183,158,232,0.08));
+    border:1px solid var(--gold); border-radius:16px; padding:22px;
+  }
+  details{margin-top:12px;}
+  summary{cursor:pointer; color:var(--teal); font-weight:600;}
+  .reveal{margin-top:10px; color:var(--text-dim); border-top:1px dashed var(--line); padding-top:10px;}
+
+  /* Quiz */
+  .quiz-card{border:1px solid var(--line); border-radius:14px; padding:18px; margin-bottom:14px; background:var(--panel);}
+  .quiz-q{font-weight:600; margin-bottom:12px;}
+  .opts{display:flex; flex-direction:column; gap:8px;}
+  .opt{
+    text-align:right; background:var(--panel-2); border:1px solid var(--line); color:var(--text);
+    padding:10px 14px; border-radius:10px; cursor:pointer; font-family:inherit; font-size:.95rem;
+    transition:.15s;
+  }
+  .opt:hover{border-color:var(--teal);}
+  .opt.correct{border-color:var(--teal); background:rgba(79,209,192,.15); color:var(--teal);}
+  .opt.wrong{border-color:var(--coral); background:rgba(255,122,99,.15); color:var(--coral);}
+  .opt[disabled]{cursor:default;}
+  #scoreBar{
+    position:sticky; top:0; z-index:5; background:rgba(10,14,28,.92); backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line); padding:10px 20px; display:flex; justify-content:space-between;
+    align-items:center; font-size:.88rem;
+  }
+  #scoreBar .n{color:var(--gold); font-weight:700;}
+
+  /* Résumé & attention */
+  .summary-grid{display:grid; grid-template-columns:1fr; gap:14px;}
+  @media(min-width:640px){ .summary-grid{grid-template-columns:1fr 1fr;} }
+  .attn{border-color:var(--coral) !important;}
+  .attn .sec-dot{background:var(--coral);}
+  ul.clean{list-style:none;}
+  ul.clean li{position:relative; padding-right:18px; margin-bottom:8px; color:var(--text-dim);}
+  ul.clean li::before{content:"◆"; position:absolute; right:0; color:var(--teal); font-size:.6rem; top:6px;}
+
+  footer{text-align:center; color:var(--text-dim); font-size:.78rem; padding:30px 20px 10px;}
+</style>
+</head>
+<body>
+
+<div id="scoreBar">
+  <span>Les Angles · 1ère secondaire</span>
+  <span>Quiz — score : <span class="n" id="scoreLive">0/0</span></span>
+</div>
+
+<div class="hero">
+  <div class="eyebrow">Géométrie · Vision animée · Prof. Houcine Mokaadi</div>
+  <h1>Les Angles</h1>
+  <p>Fais tourner le bras rouge autour du sommet : la mesure et le nom de l'angle se mettent à jour tout seuls.</p>
+
+  <div class="protractor-box">
+    <svg id="proSvg" viewBox="0 0 300 190">
+      <!-- baseline ray -->
+      <line x1="20" y1="170" x2="280" y2="170" stroke="#3a4570" stroke-width="2"/>
+      <path id="proArc" d="" fill="none" stroke="#d9b46a" stroke-width="3"/>
+      <line id="proRay" x1="20" y1="170" x2="280" y2="170" stroke="#ff7a63" stroke-width="4" stroke-linecap="round"/>
+      <circle cx="20" cy="170" r="5" fill="#edeef5"/>
+      <circle id="proHandle" cx="280" cy="170" r="11" fill="#ff7a63" stroke="#0a0e1c" stroke-width="2" style="cursor:grab;"/>
+    </svg>
+    <div class="proReadout">
+      <span class="deg" id="proDeg">0°</span>
+      <span class="badge" id="proBadge" style="color:#4fd1c0;">nul</span>
+    </div>
+    <div class="hint">👆 Glisse le point rouge</div>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- ACTIVITÉ DE DÉCOUVERTE -->
+<section>
+  <div class="sec-head"><span class="sec-dot" style="background:var(--teal);"></span><h2>Activité de découverte</h2></div>
+  <div class="card">
+    <p><strong>Observe :</strong> quand on ouvre une porte, le battant et le mur forment un angle. Au début, l'angle est presque nul ; quand la porte est grande ouverte, l'angle se rapproche de 180°.</p>
+    <p style="margin-top:10px;">Utilise le protracteur ci-dessus : place le bras rouge à <strong>45°</strong> environ (porte à moitié ouverte), puis à <strong>90°</strong> (porte perpendiculaire au mur). Que remarques-tu sur le badge qui change de couleur ?</p>
+  </div>
+</section>
+
+<!-- CRITÈRES À CONNAÎTRE -->
+<section>
+  <div class="sec-head"><span class="sec-dot" style="background:var(--gold);"></span><h2>Le vocabulaire à connaître</h2></div>
+  <div class="card">
+    <table>
+      <tr><th>Nom</th><th>Condition</th><th>Aperçu</th></tr>
+      <tr><td>Angle nul</td><td>mesure = 0°</td><td>—</td></tr>
+      <tr><td>Angle aigu</td><td>0° &lt; mesure &lt; 90°</td><td><svg class="mini-angle" width="34" height="24" viewBox="0 0 40 30"><line x1="2" y1="28" x2="38" y2="28" stroke="#4fd1c0" stroke-width="2"/><line x1="2" y1="28" x2="30" y2="6" stroke="#4fd1c0" stroke-width="2"/></svg></td></tr>
+      <tr><td>Angle droit</td><td>mesure = 90°</td><td><svg class="mini-angle" width="34" height="24" viewBox="0 0 40 30"><line x1="2" y1="28" x2="38" y2="28" stroke="#d9b46a" stroke-width="2"/><line x1="2" y1="28" x2="2" y2="2" stroke="#d9b46a" stroke-width="2"/><rect x="2" y="20" width="8" height="8" fill="none" stroke="#d9b46a"/></svg></td></tr>
+      <tr><td>Angle obtus</td><td>90° &lt; mesure &lt; 180°</td><td><svg class="mini-angle" width="34" height="24" viewBox="0 0 40 30"><line x1="2" y1="28" x2="38" y2="28" stroke="#ff7a63" stroke-width="2"/><line x1="2" y1="28" x2="10" y2="4" stroke="#ff7a63" stroke-width="2"/></svg></td></tr>
+      <tr><td>Angle plat</td><td>mesure = 180°</td><td><svg class="mini-angle" width="34" height="24" viewBox="0 0 40 30"><line x1="2" y1="15" x2="38" y2="15" stroke="#b79ee8" stroke-width="2"/></svg></td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ANGLES PARTICULIERS -->
+<section>
+  <div class="sec-head"><span class="sec-dot" style="background:var(--lilac);"></span><h2>Les angles particuliers</h2></div>
+  <div class="grid2">
+    <div class="card"><div class="prop-name">Angles complémentaires</div><p>Deux angles sont complémentaires quand la <strong>somme de leurs mesures = 90°</strong>.</p></div>
+    <div class="card"><div class="prop-name">Angles supplémentaires</div><p>Deux angles sont supplémentaires quand la <strong>somme de leurs mesures = 180°</strong>.</p></div>
+    <div class="card"><div class="prop-name">Angles adjacents</div><p>Même sommet, un côté commun, situés de part et d'autre de ce côté commun.</p></div>
+    <div class="card"><div class="prop-name">Angles opposés par le sommet</div><p>Formés par deux droites sécantes : ils sont toujours <strong>égaux</strong>.</p></div>
+  </div>
+
+  <div class="card tool" style="margin-top:14px;">
+    <div class="prop-name">Outil — trouve le complément et le supplément</div>
+    <input type="range" id="csRange" min="0" max="180" value="40">
+    <div class="tool-out">
+      <div class="chip"><div class="lab">Angle choisi</div><div class="val" id="csAngle">40°</div></div>
+      <div class="chip"><div class="lab">Complément (90° − x)</div><div class="val" id="csComp">50°</div></div>
+      <div class="chip"><div class="lab">Supplément (180° − x)</div><div class="val" id="csSup">140°</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- BISSECTRICE -->
+<section>
+  <div class="sec-head"><span class="sec-dot" style="background:var(--teal);"></span><h2>La bissectrice d'un angle</h2></div>
+  <div class="card">
+    <p>La <strong>bissectrice</strong> d'un angle est la demi-droite qui partage cet angle en <strong>deux angles égaux</strong>.</p>
+    <svg id="bisSvg" viewBox="0 0 300 200" style="margin-top:14px;">
+      <line x1="20" y1="180" x2="280" y2="180" stroke="#3a4570" stroke-width="2"/>
+      <line x1="20" y1="180" x2="90" y2="20" stroke="#3a4570" stroke-width="2"/>
+      <path id="bisArc1" fill="none" stroke="#4fd1c0" stroke-width="3"/>
+      <path id="bisArc2" fill="none" stroke="#ff7a63" stroke-width="3"/>
+      <line id="bisRay" x1="20" y1="180" x2="220" y2="60" stroke="#d9b46a" stroke-width="4" stroke-linecap="round"/>
+      <circle cx="20" cy="180" r="5" fill="#edeef5"/>
+      <circle id="bisHandle" cx="220" cy="60" r="11" fill="#d9b46a" stroke="#0a0e1c" stroke-width="2" style="cursor:grab;"/>
+    </svg>
+    <div class="bis-feedback" id="bisFeedback" style="color:var(--text-dim);">Glisse le point doré jusqu'à partager l'angle en deux parts égales.</div>
+  </div>
+</section>
+
+<!-- EXEMPLES RAPIDES -->
+<section>
+  <div class="sec-head"><span class="sec-dot" style="background:var(--gold);"></span><h2>Exemples rapides</h2></div>
+  <div class="card">
+    <p>★ Un angle de <strong>35°</strong> a pour complément <strong>55°</strong> et pour supplément <strong>145°</strong>.</p>
+    <p style="margin-top:6px;">★ Deux angles opposés par le sommet mesurant chacun <strong>72°</strong> : les deux autres angles formés mesurent chacun <strong>108°</strong> (car 180° − 72°).</p>
+    <p style="margin-top:6px;">★ Un angle de <strong>110°</strong> est <strong>obtus</strong> (car compris entre 90° et 180°).</p>
+  </div>
+</section>
+
+<!-- ANGLES ET DROITES PARALLÈLES -->
+<section>
+  <div class="sec-head"><span class="sec-dot" style="background:var(--coral);"></span><h2>Droites parallèles coupées par une sécante</h2></div>
+  <div class="card">
+    <p>Deux droites <strong>parallèles</strong> coupées par une même sécante forment 8 angles. Fais glisser le curseur pour changer l'inclinaison de la sécante : les angles <span style="color:var(--teal);font-weight:600;">correspondants</span> (même position à chaque intersection) et les angles <span style="color:var(--coral);font-weight:600;">alternes-internes</span> (entre les parallèles, de part et d'autre de la sécante) restent toujours égaux.</p>
+    <svg id="parSvg" viewBox="0 0 300 210" style="margin-top:14px;">
+      <line x1="20" y1="55" x2="280" y2="55" stroke="#3a4570" stroke-width="2"/>
+      <line x1="20" y1="155" x2="280" y2="155" stroke="#3a4570" stroke-width="2"/>
+      <line id="parTrans" x1="150" y1="15" x2="150" y2="195" stroke="#d9b46a" stroke-width="3"/>
+      <path id="parArc1" fill="none" stroke="#4fd1c0" stroke-width="3"/>
+      <path id="parArc2" fill="none" stroke="#4fd1c0" stroke-width="3"/>
+      <path id="parArc3" fill="none" stroke="#ff7a63" stroke-width="3"/>
+      <circle id="parP1" r="4" fill="#edeef5"/>
+      <circle id="parP2" r="4" fill="#edeef5"/>
+    </svg>
+    <input type="range" id="parRange" min="25" max="155" value="60" style="width:100%; accent-color:var(--gold); margin-top:6px;">
+    <div class="tool-out">
+      <div class="chip"><div class="lab">Correspondants</div><div class="val" id="parCorr" style="color:var(--teal);">—</div></div>
+      <div class="chip"><div class="lab">Alternes-internes</div><div class="val" id="parAlt" style="color:var(--coral);">—</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ANGLE INSCRIT / ANGLE AU CENTRE -->
+<section>
+  <div class="sec-head"><span class="sec-dot" style="background:var(--lilac);"></span><h2>Angle inscrit et angle au centre <span style="font-size:.7rem; color:var(--text-dim); font-weight:400;">(extension)</span></h2></div>
+  <div class="card">
+    <p>Dans un cercle, un <strong>angle au centre</strong> et un <strong>angle inscrit</strong> qui interceptent le même arc vérifient : <strong>angle inscrit = angle au centre ÷ 2</strong>. Fais glisser le point P sur le grand arc : l'angle inscrit ne change pas !</p>
+    <svg id="circSvg" viewBox="0 0 300 220" style="margin-top:14px; max-width:320px; display:block; margin-left:auto; margin-right:auto;">
+      <circle cx="150" cy="110" r="70" fill="none" stroke="#2a3356" stroke-width="2"/>
+      <line id="circCA" stroke="#3a4570" stroke-width="1.5"/>
+      <line id="circCB" stroke="#3a4570" stroke-width="1.5"/>
+      <line id="circPA" stroke="#b79ee8" stroke-width="2.5"/>
+      <line id="circPB" stroke="#b79ee8" stroke-width="2.5"/>
+      <circle id="circPtA" r="4" fill="#edeef5"/>
+      <circle id="circPtB" r="4" fill="#edeef5"/>
+      <circle cx="150" cy="110" r="3" fill="#d9b46a"/>
+      <circle id="circPtP" r="11" fill="#b79ee8" stroke="#0a0e1c" stroke-width="2" style="cursor:grab;"/>
+    </svg>
+    <div class="tool-out">
+      <div class="chip"><div class="lab">Angle au centre</div><div class="val" id="circCentral" style="color:var(--gold);">—</div></div>
+      <div class="chip"><div class="lab">Angle inscrit</div><div class="val" id="circInscrit" style="color:var(--lilac);">—</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- EXERCICE DIRECT -->
+<section>
+  <div class="sec-head"><span class="sec-dot" style="background:var(--coral);"></span><h2>Exercice direct</h2></div>
+  <div class="exo-box">
+    <p>Deux angles adjacents et supplémentaires ont pour mesures <strong>(2x + 10)°</strong> et <strong>(3x)°</strong>.</p>
+    <p style="margin-top:6px;">Trouve la valeur de <strong>x</strong>, puis la mesure de chaque angle.</p>
+    <details>
+      <summary>Voir la solution</summary>
+      <div class="reveal">
+        Somme = 180° donc (2x + 10) + 3x = 180 → 5x + 10 = 180 → 5x = 170 → <strong>x = 34</strong>.<br>
+        Premier angle : 2(34) + 10 = <strong>78°</strong>. Deuxième angle : 3(34) = <strong>102°</strong>.<br>
+        Vérification : 78 + 102 = 180° ✓
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- QUIZ -->
+<section>
+  <div class="sec-head"><span class="sec-dot" style="background:var(--lilac);"></span><h2>Quiz interactif</h2></div>
+  <div id="quizContainer"></div>
+</section>
+
+<!-- RÉSUMÉ & ATTENTION -->
+<section>
+  <div class="summary-grid">
+    <div class="card">
+      <div class="sec-head" style="margin-bottom:10px;"><span class="sec-dot" style="background:var(--teal);"></span><h2 style="font-size:1.15rem;">Résumé</h2></div>
+      <ul class="clean">
+        <li>Aigu &lt; 90° &lt; droit &lt; obtus &lt; 180° = plat</li>
+        <li>Complémentaires → somme = 90°</li>
+        <li>Supplémentaires → somme = 180°</li>
+        <li>Opposés par le sommet → toujours égaux</li>
+        <li>Bissectrice → partage en deux angles égaux</li>
+      </ul>
+    </div>
+    <div class="card attn">
+      <div class="sec-head" style="margin-bottom:10px;"><span class="sec-dot"></span><h2 style="font-size:1.15rem;">Attention</h2></div>
+      <ul class="clean">
+        <li>Complémentaire ≠ supplémentaire : ne pas confondre 90° et 180°.</li>
+        <li>Un angle obtus n'est jamais égal à 180° (sinon c'est un angle plat).</li>
+        <li>« Adjacents » ne veut pas dire « égaux » : ça décrit une position, pas une mesure.</li>
+        <li>Une bissectrice partage l'angle en deux, pas le segment en deux.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<footer>Mingshu Math — Les Angles · Préparé par Prof. Houcine Mokaadi</footer>
+
+<script>
+// ---------- PROTRACTOR ----------
+const proSvg = document.getElementById('proSvg');
+const proRay = document.getElementById('proRay');
+const proHandle = document.getElementById('proHandle');
+const proArc = document.getElementById('proArc');
+const proDeg = document.getElementById('proDeg');
+const proBadge = document.getElementById('proBadge');
+const CX = 20, CY = 170, R = 150;
+
+function classify(a){
+  if(a===0) return {label:'nul', color:'#9aa3c0'};
+  if(a<90) return {label:'aigu', color:'#4fd1c0'};
+  if(a===90) return {label:'droit', color:'#d9b46a'};
+  if(a<180) return {label:'obtus', color:'#ff7a63'};
+  return {label:'plat', color:'#b79ee8'};
+}
+
+function setProtractor(angleDeg){
+  angleDeg = Math.max(0, Math.min(180, angleDeg));
+  const rad = angleDeg * Math.PI/180;
+  const x = CX + R*Math.cos(rad);
+  const y = CY - R*Math.sin(rad);
+  proRay.setAttribute('x2', x); proRay.setAttribute('y2', y);
+  proHandle.setAttribute('cx', x); proHandle.setAttribute('cy', y);
+  const ar = 34;
+  const ax = CX + ar*Math.cos(rad), ay = CY - ar*Math.sin(rad);
+  const largeArc = angleDeg > 180 ? 1 : 0;
+  proArc.setAttribute('d', `M ${CX+ar} ${CY} A ${ar} ${ar} 0 ${largeArc} 0 ${ax} ${ay}`);
+  proDeg.textContent = Math.round(angleDeg) + '°';
+  const c = classify(Math.round(angleDeg));
+  proBadge.textContent = c.label;
+  proBadge.style.color = c.color;
+}
+
+function dragHandler(svgEl, cx, cy, onMove){
+  let dragging = false;
+  function pos(evt){
+    const rect = svgEl.getBoundingClientRect();
+    const vb = svgEl.viewBox.baseVal;
+    const clientX = evt.touches ? evt.touches[0].clientX : evt.clientX;
+    const clientY = evt.touches ? evt.touches[0].clientY : evt.clientY;
+    const x = (clientX - rect.left) / rect.width * vb.width;
+    const y = (clientY - rect.top) / rect.height * vb.height;
+    return {x,y};
+  }
+  function start(e){ dragging = true; move(e); e.preventDefault(); }
+  function move(e){
+    if(!dragging) return;
+    const p = pos(e);
+    let ang = Math.atan2(cy - p.y, p.x - cx) * 180/Math.PI;
+    onMove(ang);
+    e.preventDefault();
+  }
+  function end(){ dragging = false; }
+  svgEl.addEventListener('mousedown', start);
+  window.addEventListener('mousemove', move);
+  window.addEventListener('mouseup', end);
+  svgEl.addEventListener('touchstart', start, {passive:false});
+  window.addEventListener('touchmove', move, {passive:false});
+  window.addEventListener('touchend', end);
+}
+
+dragHandler(proSvg, CX, CY, (ang)=> setProtractor(ang));
+setProtractor(50);
+
+// ---------- COMPLEMENT / SUPPLEMENT TOOL ----------
+const csRange = document.getElementById('csRange');
+const csAngle = document.getElementById('csAngle');
+const csComp = document.getElementById('csComp');
+const csSup = document.getElementById('csSup');
+function updateCS(){
+  const x = parseInt(csRange.value);
+  csAngle.textContent = x + '°';
+  csComp.textContent = x < 90 ? (90-x) + '°' : '—';
+  csSup.textContent = x < 180 ? (180-x) + '°' : '—';
+}
+csRange.addEventListener('input', updateCS);
+updateCS();
+
+// ---------- BISECTOR ----------
+const bisSvg = document.getElementById('bisSvg');
+const bisRay = document.getElementById('bisRay');
+const bisHandle = document.getElementById('bisHandle');
+const bisArc1 = document.getElementById('bisArc1');
+const bisArc2 = document.getElementById('bisArc2');
+const bisFeedback = document.getElementById('bisFeedback');
+const BCX = 20, BCY = 180;
+const FIXED_ANGLE = 100; // angle between the two fixed rays (baseline at 0°, second ray at 100°)
+
+function setBisector(angleDeg){
+  angleDeg = Math.max(0, Math.min(FIXED_ANGLE, angleDeg));
+  const rad = angleDeg * Math.PI/180;
+  const len = 200;
+  const x = BCX + len*Math.cos(rad);
+  const y = BCY - len*Math.sin(rad);
+  bisRay.setAttribute('x2', x); bisRay.setAttribute('y2', y);
+  bisHandle.setAttribute('cx', x); bisHandle.setAttribute('cy', y);
+
+  const ar = 40;
+  const a0 = 0, a1 = angleDeg, a2 = FIXED_ANGLE;
+  function arcPath(fromA, toA, radius){
+    const p1x = BCX + radius*Math.cos(fromA*Math.PI/180), p1y = BCY - radius*Math.sin(fromA*Math.PI/180);
+    const p2x = BCX + radius*Math.cos(toA*Math.PI/180), p2y = BCY - radius*Math.sin(toA*Math.PI/180);
+    return `M ${p1x} ${p1y} A ${radius} ${radius} 0 0 0 ${p2x} ${p2y}`;
+  }
+  bisArc1.setAttribute('d', arcPath(a0, a1, ar));
+  bisArc2.setAttribute('d', arcPath(a1, a2, ar+8));
+
+  const left = Math.round(a1 - a0), right = Math.round(a2 - a1);
+  if(Math.abs(left-right) <= 2){
+    bisFeedback.textContent = `✓ ${left}° et ${right}° — c'est (presque) la bissectrice !`;
+    bisFeedback.style.color = 'var(--teal)';
+  } else {
+    bisFeedback.textContent = `${left}° et ${right}° — continue à ajuster`;
+    bisFeedback.style.color = 'var(--text-dim)';
+  }
+}
+dragHandler(bisSvg, BCX, BCY, (ang)=> setBisector(ang));
+setBisector(50);
+
+// ---------- PARALLÈLES + SÉCANTE ----------
+const parSvg = document.getElementById('parSvg');
+const parTrans = document.getElementById('parTrans');
+const parArc1 = document.getElementById('parArc1');
+const parArc2 = document.getElementById('parArc2');
+const parArc3 = document.getElementById('parArc3');
+const parP1 = document.getElementById('parP1');
+const parP2 = document.getElementById('parP2');
+const parRange = document.getElementById('parRange');
+const parCorr = document.getElementById('parCorr');
+const parAlt = document.getElementById('parAlt');
+const PY1 = 55, PY2 = 155;
+
+function ptDeg(cx, cy, deg, r){
+  const rad = deg*Math.PI/180;
+  return {x:cx + r*Math.cos(rad), y:cy + r*Math.sin(rad)};
+}
+function arcPathDeg(cx, cy, fromDeg, toDeg, r){
+  const a = ptDeg(cx,cy,fromDeg,r), b = ptDeg(cx,cy,toDeg,r);
+  return `M ${a.x} ${a.y} A ${r} ${r} 0 0 1 ${b.x} ${b.y}`;
+}
+
+function setParallel(theta){
+  theta = Math.max(20, Math.min(160, theta));
+  const P1x = 150;
+  const dx = 100 / Math.tan(theta*Math.PI/180);
+  const P2x = 150 + dx;
+  const k = 45;
+  const dirx = Math.cos(theta*Math.PI/180), diry = Math.sin(theta*Math.PI/180);
+  parTrans.setAttribute('x1', P1x - k*dirx); parTrans.setAttribute('y1', PY1 - k*diry);
+  parTrans.setAttribute('x2', P2x + k*dirx); parTrans.setAttribute('y2', PY2 + k*diry);
+  parP1.setAttribute('cx', P1x); parP1.setAttribute('cy', PY1);
+  parP2.setAttribute('cx', P2x); parP2.setAttribute('cy', PY2);
+  // corresponding pair: bottom-right at P1 (0->theta) and bottom-right at P2 (0->theta)
+  parArc1.setAttribute('d', arcPathDeg(P1x, PY1, 0, theta, 26));
+  parArc2.setAttribute('d', arcPathDeg(P2x, PY2, 0, theta, 26));
+  // alternate-interior: top-left at P2 (180 -> 180+theta)
+  parArc3.setAttribute('d', arcPathDeg(P2x, PY2, 180, 180+theta, 40));
+  parCorr.textContent = Math.round(theta) + '°  =  ' + Math.round(theta) + '°';
+  parAlt.textContent = Math.round(theta) + '°  =  ' + Math.round(theta) + '°';
+}
+parRange.addEventListener('input', ()=> setParallel(parseFloat(parRange.value)));
+setParallel(60);
+
+// ---------- ANGLE INSCRIT / ANGLE AU CENTRE ----------
+const circCA = document.getElementById('circCA');
+const circCB = document.getElementById('circCB');
+const circPA = document.getElementById('circPA');
+const circPB = document.getElementById('circPB');
+const circPtA = document.getElementById('circPtA');
+const circPtB = document.getElementById('circPtB');
+const circPtP = document.getElementById('circPtP');
+const circCentral = document.getElementById('circCentral');
+const circInscrit = document.getElementById('circInscrit');
+const CC = {x:150, y:110}, CR = 70;
+const A_DEG = 160, B_DEG = 20;
+
+function angleAtVertex(P,A,B){
+  const v1={x:A.x-P.x,y:A.y-P.y}, v2={x:B.x-P.x,y:B.y-P.y};
+  const dot=v1.x*v2.x+v1.y*v2.y;
+  const det=v1.x*v2.y-v1.y*v2.x;
+  return Math.atan2(Math.abs(det),dot)*180/Math.PI;
+}
+
+function setCircle(pDeg){
+  const A = ptDeg(CC.x, CC.y, A_DEG, CR);
+  const B = ptDeg(CC.x, CC.y, B_DEG, CR);
+  const P = ptDeg(CC.x, CC.y, pDeg, CR);
+  circPtA.setAttribute('cx', A.x); circPtA.setAttribute('cy', A.y);
+  circPtB.setAttribute('cx', B.x); circPtB.setAttribute('cy', B.y);
+  circPtP.setAttribute('cx', P.x); circPtP.setAttribute('cy', P.y);
+  circCA.setAttribute('x1', CC.x); circCA.setAttribute('y1', CC.y); circCA.setAttribute('x2', A.x); circCA.setAttribute('y2', A.y);
+  circCB.setAttribute('x1', CC.x); circCB.setAttribute('y1', CC.y); circCB.setAttribute('x2', B.x); circCB.setAttribute('y2', B.y);
+  circPA.setAttribute('x1', P.x); circPA.setAttribute('y1', P.y); circPA.setAttribute('x2', A.x); circPA.setAttribute('y2', A.y);
+  circPB.setAttribute('x1', P.x); circPB.setAttribute('y1', P.y); circPB.setAttribute('x2', B.x); circPB.setAttribute('y2', B.y);
+  const central = Math.round(angleAtVertex(CC, A, B));
+  const inscribed = Math.round(angleAtVertex(P, A, B));
+  circCentral.textContent = central + '°';
+  circInscrit.textContent = inscribed + '°  (= ' + central + '° ÷ 2)';
+}
+const circSvg = document.getElementById('circSvg');
+dragHandler(circSvg, CC.x, CC.y, (angRaw)=>{
+  // dragHandler gives math-convention angle (ccw, y-up); convert to our screen-clockwise convention
+  let deg = (360 - angRaw) % 360;
+  if(deg < 0) deg += 360;
+  // clamp to the major arc (190 to 340) so P stays away from A and B
+  if(deg > 20 && deg < 190) deg = (deg < 105) ? 20.01 : 190;
+  if(deg > 340) deg = 340;
+  setCircle(deg);
+});
+setCircle(260);
+
+// ---------- QUIZ ----------
+const questions = [
+  {q:"Un angle de 112° est un angle :", opts:["aigu","droit","obtus","plat"], correct:2},
+  {q:"Le complément d'un angle de 25° est :", opts:["65°","75°","155°","25°"], correct:0},
+  {q:"Le supplément d'un angle de 70° est :", opts:["20°","110°","90°","130°"], correct:1},
+  {q:"Deux angles opposés par le sommet sont toujours :", opts:["complémentaires","supplémentaires","égaux","adjacents"], correct:2},
+  {q:"La bissectrice d'un angle de 80° forme deux angles de :", opts:["40° et 40°","80° et 0°","20° et 60°","50° et 30°"], correct:0},
+  {q:"Deux angles correspondants formés par deux parallèles coupées par une sécante sont :", opts:["complémentaires","supplémentaires","égaux","opposés par le sommet"], correct:2},
+  {q:"Un angle au centre mesure 100°. L'angle inscrit qui intercepte le même arc mesure :", opts:["50°","100°","200°","25°"], correct:0}
+];
+let score = 0, answered = 0;
+const scoreLive = document.getElementById('scoreLive');
+const quizContainer = document.getElementById('quizContainer');
+
+questions.forEach((item, qi)=>{
+  const card = document.createElement('div');
+  card.className = 'quiz-card';
+  const qEl = document.createElement('div');
+  qEl.className = 'quiz-q';
+  qEl.textContent = (qi+1) + '. ' + item.q;
+  card.appendChild(qEl);
+  const optsWrap = document.createElement('div');
+  optsWrap.className = 'opts';
+  item.opts.forEach((opt, oi)=>{
+    const btn = document.createElement('button');
+    btn.className = 'opt';
+    btn.textContent = opt;
+    btn.addEventListener('click', ()=>{
+      const buttons = optsWrap.querySelectorAll('.opt');
+      buttons.forEach(b=>b.disabled = true);
+      if(oi === item.correct){
+        btn.classList.add('correct');
+        score++;
+      } else {
+        btn.classList.add('wrong');
+        buttons[item.correct].classList.add('correct');
+      }
+      answered++;
+      scoreLive.textContent = score + '/' + answered;
+    });
+    optsWrap.appendChild(btn);
+  });
+  card.appendChild(optsWrap);
+  quizContainer.appendChild(card);
+});
+</script>
+</body>
+</html>
