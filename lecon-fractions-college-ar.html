@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الكسور — مينغشو ماث</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --void:#0a0e1c; --panel:#111830; --panel-2:#151d38; --line:#2a3356;
+    --gold:#d9b46a; --teal:#4fd1c0; --coral:#ff7a63; --lilac:#b79ee8;
+    --text:#edeef5; --text-dim:#9aa3c0;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:var(--void);
+    background-image:
+      radial-gradient(circle at 85% 10%, rgba(217,180,106,0.07), transparent 40%),
+      radial-gradient(circle at 15% 30%, rgba(79,209,192,0.06), transparent 45%);
+    color:var(--text); font-family:'Cairo', sans-serif; line-height:1.9; padding-bottom:60px;
+  }
+  h1,h2,h3{font-family:'Cairo', sans-serif; font-weight:800;}
+  .wrap{max-width:920px; margin:0 auto; padding:0 20px;}
+  .hero{padding:50px 20px 40px; text-align:center; border-bottom:1px solid var(--line);}
+  .eyebrow{letter-spacing:.05em; font-size:.78rem; color:var(--teal); font-weight:700;}
+  .hero h1{font-size:clamp(2.2rem, 8vw, 3.4rem); margin:10px 0 6px;
+    background:linear-gradient(90deg, var(--gold), var(--lilac)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+  .hero p{color:var(--text-dim); font-size:1.05rem; max-width:540px; margin:0 auto;}
+
+  section{padding:44px 20px;}
+  .sec-head{display:flex; align-items:center; gap:12px; margin-bottom:18px;}
+  .sec-dot{width:10px; height:10px; border-radius:50%; flex:none;}
+  .sec-head h2{font-size:1.5rem;}
+  .card{background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:22px; margin-bottom:14px;}
+  .card p{color:var(--text-dim);}
+  .card strong{color:var(--text);}
+
+  .frac{display:inline-flex; flex-direction:column; vertical-align:middle; text-align:center; font-weight:800; margin:0 6px;}
+  .frac .num{border-bottom:2px solid var(--gold); padding:0 8px;}
+  .frac .den{padding:0 8px;}
+
+  .viz-box{max-width:440px; margin:0 auto;}
+  #vizPie{width:110px; height:110px; border-radius:50%; border:1px solid var(--line);}
+  #vizBar{display:flex; width:100%; height:60px; border-radius:10px; overflow:hidden; border:1px solid var(--line);}
+  #vizBar div{flex:1; border-left:1px solid var(--void);}
+  #vizBar div:last-child{border-left:none;}
+  .filled{background:var(--teal);}
+  .empty{background:var(--panel-2);}
+  .sliders{display:flex; flex-direction:column; gap:10px; margin-top:16px;}
+  .sliders label{font-size:.85rem; color:var(--text-dim); display:flex; justify-content:space-between;}
+  input[type=range]{width:100%; accent-color:var(--gold);}
+  .viz-readout{text-align:center; margin-top:10px; font-size:1.5rem; font-weight:800; color:var(--gold);}
+
+  .numbox{width:70px; text-align:center; padding:8px; border-radius:8px; border:1px solid var(--line); background:var(--panel-2); color:var(--text); font-size:1.15rem; font-family:'Cairo',sans-serif;}
+  .stat-chip{background:var(--panel-2); border:1px solid var(--line); border-radius:10px; padding:10px 14px; flex:1; min-width:110px; text-align:center;}
+  .stat-chip .lab{font-size:.75rem; color:var(--text-dim);}
+  .stat-chip .val{font-size:1.3rem; font-weight:800;}
+
+  .add-viz{display:flex; gap:10px; align-items:center; justify-content:center; flex-wrap:wrap; margin-top:14px;}
+  .add-viz .bar{width:80px; height:50px; border-radius:8px; border:1px solid var(--line); display:flex; overflow:hidden;}
+  .add-viz .bar div{flex:1; border-left:1px solid var(--void);}
+  .add-viz .bar div:last-child{border-left:none;}
+  .add-op{font-size:1.4rem; color:var(--text-dim); font-weight:800;}
+
+  details{margin-top:12px;}
+  summary{cursor:pointer; color:var(--teal); font-weight:700;}
+  .reveal{margin-top:10px; color:var(--text-dim); border-top:1px dashed var(--line); padding-top:10px;}
+  .exo-box{background:linear-gradient(135deg, rgba(217,180,106,0.10), rgba(183,158,232,0.08)); border:1px solid var(--gold); border-radius:16px; padding:22px;}
+
+  .quiz-card{border:1px solid var(--line); border-radius:14px; padding:18px; margin-bottom:14px; background:var(--panel);}
+  .quiz-q{font-weight:700; margin-bottom:12px;}
+  .opts{display:flex; flex-direction:column; gap:8px;}
+  .opt{text-align:right; background:var(--panel-2); border:1px solid var(--line); color:var(--text);
+    padding:10px 14px; border-radius:10px; cursor:pointer; font-family:inherit; font-size:1rem; transition:.15s;}
+  .opt:hover{border-color:var(--teal);}
+  .opt.correct{border-color:var(--teal); background:rgba(79,209,192,.15); color:var(--teal);}
+  .opt.wrong{border-color:var(--coral); background:rgba(255,122,99,.15); color:var(--coral);}
+  .opt[disabled]{cursor:default;}
+  #scoreBar{position:sticky; top:0; z-index:5; background:rgba(10,14,28,.92); backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line); padding:10px 20px; display:flex; justify-content:space-between; align-items:center; font-size:.9rem;}
+  #scoreBar .n{color:var(--gold); font-weight:800;}
+
+  ul.clean{list-style:none;}
+  ul.clean li{position:relative; padding-right:20px; margin-bottom:10px; color:var(--text-dim);}
+  ul.clean li::before{content:"◆"; position:absolute; right:0; color:var(--teal); font-size:.6rem; top:9px;}
+
+  .btn{border:none; padding:10px 18px; border-radius:10px; font-family:inherit; font-weight:700; cursor:pointer; font-size:.95rem;}
+  .btn-ghost{background:var(--panel-2); border:1px solid var(--line); color:var(--text);}
+  .btn-solid{background:var(--teal); color:var(--void);}
+
+  footer{text-align:center; color:var(--text-dim); font-size:.82rem; padding:30px 20px 10px;}
+  footer .name{color:var(--gold); font-weight:700;}
+</style>
+</head>
+<body>
+
+<div id="scoreBar">
+  <span>الكسور</span>
+  <span>الاختبار — النتيجة: <span class="n" id="scoreLive">0/0</span></span>
+</div>
+
+<div class="hero">
+  <div class="eyebrow">الأعداد · رؤية متحركة</div>
+  <h1>الكسور</h1>
+  <p>حرّك المؤشرات لترى الكسر يمتلئ أمام عينيك — أفضل طريقة لفهم البسط والمقام.</p>
+
+  <div class="viz-box">
+    <div style="display:flex; gap:20px; align-items:center; justify-content:center; flex-wrap:wrap;">
+      <div id="vizPie"></div>
+      <div id="vizBar" style="flex:1; min-width:160px;"></div>
+    </div>
+    <div class="sliders">
+      <label>البسط (أ): <input type="number" id="numRange" min="0" max="12" value="2" class="numbox" style="width:56px;"></label>
+      <label>المقام (ب): <input type="number" id="denRange" min="1" max="12" value="8" class="numbox" style="width:56px;"></label>
+    </div>
+    <div class="viz-readout" id="vizReadout">2 / 8</div>
+  </div>
+</div>
+
+<div class="wrap">
+
+<section>
+  <div class="sec-head"><span class="sec-dot" style="background:var(--teal);"></span><h2>1. تعريف الكسر</h2></div>
+  <div class="card">
+    <p>الكسر يمثل <strong>تقسيمًا عادلًا</strong> لوحدة ما إلى أجزاء متساوية. يُكتب على الشكل
+      <span class="frac"><span class="num">أ</span><span class="den">ب</span></span> حيث:</p>
+    <ul class="clean" style="margin-top:12px;">
+      <li><strong>أ</strong> هو <em>البسط</em> — عدد الأجزاء التي نأخذها.</li>
+      <li><strong>ب</strong> هو <em>المقام</em> — العدد الكلي للأجزاء المتساوية (بشرط ب ≠ 0).</li>
+    </ul>
+    <p style="margin-top:12px;">مثال: إذا قسّمنا فطيرة إلى 8 أجزاء متساوية وأخذنا 3 منها، فإننا أخذنا
+      <span class="frac"><span class="num">3</span><span class="den">8</span></span> من الفطيرة.</p>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-dot" style="background:var(--gold);"></span><h2>2. الجمع والطرح</h2></div>
+  <div class="card">
+    <p>لجمع أو طرح كسرين، يجب أن يكون لهما <strong>نفس المقام</strong>. في هذه الحالة، نجمع (أو نطرح) البسطين فقط ونحتفظ بنفس المقام.</p>
+    <div class="add-viz">
+      <div class="bar" id="addBar1"></div>
+      <span class="add-op">+</span>
+      <div class="bar" id="addBar2"></div>
+      <span class="add-op">=</span>
+      <div class="bar" id="addBar3"></div>
+    </div>
+    <div class="sliders" style="max-width:320px; margin:14px auto 0;">
+      <label>البسط الأول <span id="add1Label">2</span><input type="range" id="add1Range" min="0" max="7" value="2"></label>
+      <label>البسط الثاني <span id="add2Label">3</span><input type="range" id="add2Range" min="0" max="7" value="3"></label>
+    </div>
+    <div class="viz-readout" id="addReadout" style="font-size:1.1rem;">2/7 + 3/7 = 5/7</div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-dot" style="background:var(--lilac);"></span><h2>3. الضرب</h2></div>
+  <div class="card">
+    <p>نضرب البسط في البسط، والمقام في المقام — دون الحاجة إلى مقام مشترك.</p>
+    <p style="margin-top:12px;"><em>مثال:</em>
+      <span class="frac"><span class="num">2</span><span class="den">3</span></span> ×
+      <span class="frac"><span class="num">4</span><span class="den">5</span></span> =
+      <span class="frac"><span class="num">8</span><span class="den">15</span></span>
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-dot" style="background:var(--teal);"></span><h2>4. تبسيط الكسر</h2></div>
+  <div class="card">
+    <p>تبسيط الكسر يعني قسمة البسط والمقام على <strong>القاسم المشترك الأكبر (ق.م.أ)</strong> للحصول على كسر مكافئ أبسط.</p>
+    <div style="display:flex; align-items:center; justify-content:center; gap:14px; margin-top:16px; flex-wrap:wrap;">
+      <div style="display:flex; flex-direction:column; align-items:center;">
+        <input type="number" id="simpNum" value="12" class="numbox">
+        <div style="width:70px; height:1px; background:var(--gold); margin:6px 0;"></div>
+        <input type="number" id="simpDen" value="18" class="numbox">
+      </div>
+      <span style="font-size:1.4rem; color:var(--text-dim); font-weight:800;">=</span>
+      <div id="simpResult" style="font-size:1.4rem; color:var(--teal); font-weight:800;">2 / 3</div>
+    </div>
+    <div class="viz-readout" id="simpDetail" style="font-size:.9rem; color:var(--text-dim);">ق.م.أ(12، 18) = 6</div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-dot" style="background:var(--gold);"></span><h2>5. مقارنة كسرين</h2></div>
+  <div class="card">
+    <p>لمقارنة كسرين، نضعهما على <strong>نفس المقام</strong>، أو نقارن الجداء التبادلي:
+      <span class="frac"><span class="num">أ</span><span class="den">ب</span></span> &lt;
+      <span class="frac"><span class="num">ج</span><span class="den">د</span></span>
+      إذا كان أ×د &lt; ج×ب (مع ب، د &gt; 0).</p>
+    <p style="margin-top:12px;"><em>مثال:</em>
+      <span class="frac"><span class="num">3</span><span class="den">4</span></span> و
+      <span class="frac"><span class="num">5</span><span class="den">7</span></span>:
+      3×7 = 21 و 5×4 = 20، إذن 21 &gt; 20، إذن
+      <span class="frac"><span class="num">3</span><span class="den">4</span></span> &gt;
+      <span class="frac"><span class="num">5</span><span class="den">7</span></span>.
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-dot" style="background:var(--coral);"></span><h2>تمارين تطبيقية</h2></div>
+  <div class="exo-box">
+    <p>احسب وبسّط إن أمكن:</p>
+    <p style="margin-top:8px;">1) <span class="frac"><span class="num">1</span><span class="den">4</span></span> + <span class="frac"><span class="num">2</span><span class="den">4</span></span></p>
+    <p style="margin-top:6px;">2) <span class="frac"><span class="num">3</span><span class="den">5</span></span> × <span class="frac"><span class="num">2</span><span class="den">7</span></span></p>
+    <p style="margin-top:6px;">3) <span class="frac"><span class="num">5</span><span class="den">6</span></span> − <span class="frac"><span class="num">1</span><span class="den">6</span></span></p>
+    <p style="margin-top:6px;">4) بسّط <span class="frac"><span class="num">16</span><span class="den">24</span></span></p>
+    <p style="margin-top:6px;">5) قارن <span class="frac"><span class="num">2</span><span class="den">3</span></span> و <span class="frac"><span class="num">3</span><span class="den">5</span></span></p>
+    <details>
+      <summary>مشاهدة الحلول</summary>
+      <div class="reveal">
+        1) <span class="frac"><span class="num">1</span><span class="den">4</span></span> + <span class="frac"><span class="num">2</span><span class="den">4</span></span> = <span class="frac"><span class="num">3</span><span class="den">4</span></span><br><br>
+        2) <span class="frac"><span class="num">3</span><span class="den">5</span></span> × <span class="frac"><span class="num">2</span><span class="den">7</span></span> = <span class="frac"><span class="num">6</span><span class="den">35</span></span><br><br>
+        3) <span class="frac"><span class="num">5</span><span class="den">6</span></span> − <span class="frac"><span class="num">1</span><span class="den">6</span></span> = <span class="frac"><span class="num">4</span><span class="den">6</span></span> = <span class="frac"><span class="num">2</span><span class="den">3</span></span><br><br>
+        4) ق.م.أ(16، 24) = 8 → <span class="frac"><span class="num">16</span><span class="den">24</span></span> = <span class="frac"><span class="num">2</span><span class="den">3</span></span><br><br>
+        5) 2×5 = 10 و 3×3 = 9، إذن 10 &gt; 9، إذن <span class="frac"><span class="num">2</span><span class="den">3</span></span> &gt; <span class="frac"><span class="num">3</span><span class="den">5</span></span>
+      </div>
+    </details>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-dot" style="background:var(--coral);"></span><h2>تحدٍّ زمني</h2></div>
+  <div class="card">
+    <p>حلّ أكبر عدد ممكن من العمليات قبل انتهاء الوقت. أدخل إجابتك على شكل كسر (البسط / المقام).</p>
+    <div style="display:flex; gap:14px; flex-wrap:wrap; margin-top:14px;">
+      <div class="stat-chip"><div class="lab">المحاولات</div><div class="val" id="chalAttempts">0</div></div>
+      <div class="stat-chip"><div class="lab">الإجابات الصحيحة</div><div class="val" id="chalCorrect" style="color:var(--teal);">0</div></div>
+      <div class="stat-chip"><div class="lab">نسبة النجاح</div><div class="val" id="chalRate" style="color:var(--teal);">0%</div></div>
+      <div class="stat-chip"><div class="lab">الوقت المتبقي</div><div class="val" id="chalTimer" style="color:var(--coral);">15ث</div></div>
+    </div>
+
+    <div style="text-align:center; margin-top:20px; font-size:1.5rem; font-weight:800;" id="chalProblem">…</div>
+
+    <div style="display:flex; align-items:center; justify-content:center; gap:10px; margin-top:16px;">
+      <div style="display:flex; flex-direction:column; align-items:center;">
+        <input type="number" id="chalNum" class="numbox">
+        <div style="width:70px; height:1px; background:var(--gold); margin:6px 0;"></div>
+        <input type="number" id="chalDen" class="numbox">
+      </div>
+    </div>
+
+    <div style="display:flex; gap:10px; justify-content:center; margin-top:16px; flex-wrap:wrap;">
+      <button id="chalNewBtn" class="btn btn-ghost">↻ سؤال جديد</button>
+      <button id="chalConfirmBtn" class="btn btn-solid">✓ تأكيد الإجابة</button>
+    </div>
+    <div id="chalFeedback" style="text-align:center; margin-top:14px; font-weight:700; min-height:1.6em;"></div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-dot" style="background:var(--lilac);"></span><h2>اختبار تفاعلي</h2></div>
+  <div id="quizContainer"></div>
+</section>
+
+<section>
+  <div class="card">
+    <div class="sec-head" style="margin-bottom:12px;"><span class="sec-dot" style="background:var(--gold);"></span><h2 style="font-size:1.2rem;">خلاصة</h2></div>
+    <ul class="clean">
+      <li>الكسر = البسط ÷ المقام (تقسيم وحدة إلى أجزاء متساوية)</li>
+      <li>الجمع/الطرح ← نفس المقام، نجمع البسطين فقط</li>
+      <li>الضرب ← البسط في البسط، المقام في المقام</li>
+      <li>التبسيط ← القسمة على القاسم المشترك الأكبر</li>
+      <li>المقارنة ← نفس المقام أو الجداء التبادلي</li>
+    </ul>
+  </div>
+</section>
+
+</div>
+
+<footer>مينغشو ماث — الكسور · إعداد <span class="name">الأستاذ حسين مقادي</span> و <span class="name">الأستاذة سيرين بن نور</span></footer>
+
+<script>
+function gcdX(a,b){ a=Math.abs(a); b=Math.abs(b); while(b){ [a,b]=[b, a%b]; } return a || 1; }
+function fracHTML(n, d){ return `<span class="frac"><span class="num">${n}</span><span class="den">${d}</span></span>`; }
+
+// ---------- المصور التفاعلي ----------
+const vizBar = document.getElementById('vizBar');
+const vizPie = document.getElementById('vizPie');
+const numRange = document.getElementById('numRange');
+const denRange = document.getElementById('denRange');
+const vizReadout = document.getElementById('vizReadout');
+
+function renderBar(container, num, den){
+  container.innerHTML = '';
+  for(let i=0;i<den;i++){
+    const seg = document.createElement('div');
+    seg.className = i < num ? 'filled' : 'empty';
+    container.appendChild(seg);
+  }
+}
+function updateViz(){
+  let den = Math.max(1, parseInt(denRange.value) || 1);
+  let num = Math.max(parseInt(numRange.value) || 0, 0);
+  vizReadout.innerHTML = fracHTML(num, den);
+  renderBar(vizBar, num, den);
+  const pct = den > 0 ? Math.min(num/den*100, 100) : 0;
+  vizPie.style.background = `conic-gradient(var(--teal) 0% ${pct}%, var(--panel-2) ${pct}% 100%)`;
+}
+numRange.addEventListener('input', updateViz);
+denRange.addEventListener('input', updateViz);
+updateViz();
+
+// ---------- الجمع ----------
+const addBar1 = document.getElementById('addBar1');
+const addBar2 = document.getElementById('addBar2');
+const addBar3 = document.getElementById('addBar3');
+const add1Range = document.getElementById('add1Range');
+const add2Range = document.getElementById('add2Range');
+const add1Label = document.getElementById('add1Label');
+const add2Label = document.getElementById('add2Label');
+const addReadout = document.getElementById('addReadout');
+const ADD_DEN = 7;
+function updateAdd(){
+  const n1 = parseInt(add1Range.value);
+  const n2 = parseInt(add2Range.value);
+  add1Label.textContent = n1;
+  add2Label.textContent = n2;
+  renderBar(addBar1, n1, ADD_DEN);
+  renderBar(addBar2, n2, ADD_DEN);
+  const sum = Math.min(n1+n2, ADD_DEN);
+  renderBar(addBar3, sum, ADD_DEN);
+  addReadout.innerHTML = fracHTML(n1, ADD_DEN) + ' + ' + fracHTML(n2, ADD_DEN) + ' = ' + fracHTML(n1+n2, ADD_DEN);
+}
+add1Range.addEventListener('input', updateAdd);
+add2Range.addEventListener('input', updateAdd);
+updateAdd();
+
+// ---------- التبسيط ----------
+const simpNum = document.getElementById('simpNum');
+const simpDen = document.getElementById('simpDen');
+const simpResult = document.getElementById('simpResult');
+const simpDetail = document.getElementById('simpDetail');
+function updateSimp(){
+  const n = parseInt(simpNum.value) || 0;
+  const d = parseInt(simpDen.value) || 1;
+  const g = gcdX(n,d);
+  simpResult.innerHTML = fracHTML(n/g, d/g);
+  simpDetail.textContent = `ق.م.أ(${n}، ${d}) = ${g}`;
+}
+simpNum.addEventListener('input', updateSimp);
+simpDen.addEventListener('input', updateSimp);
+updateSimp();
+
+// ---------- التحدي الزمني ----------
+const chalProblem = document.getElementById('chalProblem');
+const chalNum = document.getElementById('chalNum');
+const chalDen = document.getElementById('chalDen');
+const chalNewBtn = document.getElementById('chalNewBtn');
+const chalConfirmBtn = document.getElementById('chalConfirmBtn');
+const chalFeedback = document.getElementById('chalFeedback');
+const chalAttempts = document.getElementById('chalAttempts');
+const chalCorrect = document.getElementById('chalCorrect');
+const chalRate = document.getElementById('chalRate');
+const chalTimer = document.getElementById('chalTimer');
+
+let chalAttemptCount = 0, chalCorrectCount = 0, chalTimeLeft = 15, chalInterval = null;
+let chalAnswerNum = 0, chalAnswerDen = 1;
+
+function newChallenge(){
+  clearInterval(chalInterval);
+  const b = 2 + Math.floor(Math.random()*7);
+  const d = 2 + Math.floor(Math.random()*7);
+  const a = 1 + Math.floor(Math.random()*(b-1));
+  const c = 1 + Math.floor(Math.random()*(d-1));
+  chalProblem.innerHTML = '(' + fracHTML(a,b) + ')&nbsp;+&nbsp;(' + fracHTML(c,d) + ')';
+  let rn = a*d + c*b, rd = b*d;
+  const g = gcdX(rn, rd);
+  chalAnswerNum = rn/g; chalAnswerDen = rd/g;
+  chalNum.value = ''; chalDen.value = '';
+  chalFeedback.textContent = '';
+  chalTimeLeft = 15;
+  chalTimer.textContent = chalTimeLeft + 'ث';
+  chalInterval = setInterval(()=>{
+    chalTimeLeft--;
+    chalTimer.textContent = Math.max(chalTimeLeft,0) + 'ث';
+    if(chalTimeLeft <= 0){
+      clearInterval(chalInterval);
+      chalAttemptCount++;
+      chalFeedback.innerHTML = `⏱️ انتهى الوقت! الإجابة الصحيحة: ${fracHTML(chalAnswerNum, chalAnswerDen)}`;
+      chalFeedback.style.color = 'var(--coral)';
+      updateChalStats();
+    }
+  }, 1000);
+}
+function updateChalStats(){
+  chalAttempts.textContent = chalAttemptCount;
+  chalCorrect.textContent = chalCorrectCount;
+  chalRate.textContent = chalAttemptCount>0 ? Math.round(chalCorrectCount/chalAttemptCount*100)+'%' : '0%';
+}
+chalConfirmBtn.addEventListener('click', ()=>{
+  if(chalTimeLeft <= 0) return;
+  clearInterval(chalInterval);
+  const un = parseInt(chalNum.value), ud = parseInt(chalDen.value);
+  chalAttemptCount++;
+  if(!isNaN(un) && !isNaN(ud) && ud !== 0){
+    const g = gcdX(un, ud);
+    const sun = un/g, sud = ud/g;
+    if(sun === chalAnswerNum && sud === chalAnswerDen){
+      chalCorrectCount++;
+      chalFeedback.textContent = '✓ إجابة صحيحة !';
+      chalFeedback.style.color = 'var(--teal)';
+    } else {
+      chalFeedback.innerHTML = `✗ إجابة خاطئة — الصحيحة: ${fracHTML(chalAnswerNum, chalAnswerDen)}`;
+      chalFeedback.style.color = 'var(--coral)';
+    }
+  } else {
+    chalFeedback.innerHTML = `أدخل كسرًا صحيحًا — الإجابة الصحيحة: ${fracHTML(chalAnswerNum, chalAnswerDen)}`;
+    chalFeedback.style.color = 'var(--coral)';
+  }
+  updateChalStats();
+});
+chalNewBtn.addEventListener('click', newChallenge);
+newChallenge();
+
+// ---------- الاختبار ----------
+const questions = [
+  {q:"في الكسر 3/8، ماذا يمثل الرقم 8؟", opts:["البسط","المقام","المجموع","الناتج"], correct:1},
+  {q:"1/5 + 2/5 = ؟", opts:["3/10","3/5","1/5","2/5"], correct:1},
+  {q:"2/3 × 3/4 = ؟", opts:["5/7","6/12","1/2","6/7"], correct:2},
+  {q:"لجمع كسرين، يجب أن يكون لهما:", opts:["نفس البسط","نفس المقام","حاصل ضرب متساوٍ","لا شيء خاص"], correct:1},
+  {q:"3/6 يساوي:", opts:["1/2","1/3","2/3","3/2"], correct:0},
+  {q:"5/6 − 1/6 = ؟", opts:["4/6","4/0","6/6","1/6"], correct:0},
+  {q:"القاسم المشترك الأكبر بين 12 و 18 هو:", opts:["2","3","6","12"], correct:2},
+  {q:"أي كسر أكبر؟", opts:["2/3","3/5","1/2","2/5"], correct:0},
+  {q:"18/24 مبسّطًا يعطي:", opts:["3/4","2/3","9/12","6/8"], correct:0},
+  {q:"4/9 و 5/9: أيّ عبارة صحيحة؟", opts:["4/9 < 5/9","4/9 > 5/9","4/9 = 5/9","لا يمكن المقارنة"], correct:0}
+];
+function renderFracText(str){ return str.replace(/(\d+)\/(\d+)/g, (m,n,d)=> fracHTML(n,d)); }
+let score = 0, answered = 0;
+const scoreLive = document.getElementById('scoreLive');
+const quizContainer = document.getElementById('quizContainer');
+questions.forEach((item, qi)=>{
+  const card = document.createElement('div');
+  card.className = 'quiz-card';
+  const qEl = document.createElement('div');
+  qEl.className = 'quiz-q';
+  qEl.innerHTML = (qi+1) + '. ' + renderFracText(item.q);
+  card.appendChild(qEl);
+  const optsWrap = document.createElement('div');
+  optsWrap.className = 'opts';
+  item.opts.forEach((opt, oi)=>{
+    const btn = document.createElement('button');
+    btn.className = 'opt';
+    btn.innerHTML = renderFracText(opt);
+    btn.addEventListener('click', ()=>{
+      const buttons = optsWrap.querySelectorAll('.opt');
+      buttons.forEach(b=>b.disabled = true);
+      if(oi === item.correct){
+        btn.classList.add('correct');
+        score++;
+      } else {
+        btn.classList.add('wrong');
+        buttons[item.correct].classList.add('correct');
+      }
+      answered++;
+      scoreLive.textContent = score + '/' + answered;
+    });
+    optsWrap.appendChild(btn);
+  });
+  card.appendChild(optsWrap);
+  quizContainer.appendChild(card);
+});
+</script>
+</body>
+</html>
