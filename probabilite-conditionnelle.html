@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Probabilité conditionnelle — Fiche résumé | mingshu-math</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&family=Caveat:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --nuit: #0a0e1c;
+    --nuit-2: #10152a;
+    --or: #d4af6a;
+    --teal: #3fa9a0;
+    --corail: #e8735f;
+    --lilas: #b79fd1;
+    --texte: #eef0f7;
+    --texte-doux: #a9adc4;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--nuit);
+    color:var(--texte);
+    font-family:'Work Sans',sans-serif;
+    line-height:1.6;
+  }
+  h1,h2,h3,.display{font-family:'Fraunces',serif;}
+  .hand{font-family:'Caveat',cursive;}
+
+  /* ---------- Cover ---------- */
+  .cover{
+    min-height:62vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    padding:8vw 8vw 6vw;
+    background:
+      radial-gradient(ellipse at 15% 20%, rgba(63,169,160,0.16), transparent 55%),
+      radial-gradient(ellipse at 85% 75%, rgba(232,115,95,0.14), transparent 55%),
+      var(--nuit);
+    border-bottom:1px solid rgba(212,175,106,0.25);
+    position:relative;
+    overflow:hidden;
+  }
+  .eyebrow{
+    color:var(--teal);
+    text-transform:uppercase;
+    letter-spacing:0.18em;
+    font-size:0.78rem;
+    font-weight:600;
+    margin-bottom:1.2rem;
+  }
+  .cover h1{
+    font-size:clamp(2.2rem, 6vw, 4rem);
+    font-weight:600;
+    margin:0 0 0.6rem;
+    max-width:14ch;
+  }
+  .cover h1 em{
+    font-style:italic;
+    color:var(--or);
+  }
+  .cover p.sub{
+    color:var(--texte-doux);
+    font-size:1.05rem;
+    max-width:52ch;
+    margin:0.8rem 0 0;
+  }
+  .meta-row{
+    margin-top:2rem;
+    display:flex;
+    gap:2rem;
+    flex-wrap:wrap;
+    font-size:0.85rem;
+    color:var(--texte-doux);
+  }
+  .meta-row span b{color:var(--lilas);}
+
+  main{max-width:840px;margin:0 auto;padding:4rem 6vw 6rem;}
+  section{margin-bottom:3.4rem;}
+  h2{
+    font-size:1.5rem;
+    color:var(--or);
+    font-weight:600;
+    margin-bottom:1rem;
+    display:flex;
+    align-items:baseline;
+    gap:0.6rem;
+  }
+  h2 .num{color:var(--corail);font-size:1rem;}
+
+  /* ---------- Définition box ---------- */
+  .def{
+    background:var(--nuit-2);
+    border-left:3px solid var(--teal);
+    border-radius:6px;
+    padding:1.4rem 1.6rem;
+    font-size:1.02rem;
+  }
+  .def .formule{
+    font-family:'Fraunces',serif;
+    font-size:1.5rem;
+    color:var(--texte);
+    text-align:center;
+    margin:1rem 0 0.4rem;
+    letter-spacing:0.02em;
+  }
+  .def .cond{
+    text-align:center;
+    color:var(--texte-doux);
+    font-size:0.85rem;
+  }
+
+  /* ---------- Sticky note ---------- */
+  .sticky{
+    background:linear-gradient(180deg, #f4e6b8, #e9d089);
+    color:#2a2210;
+    border-radius:2px;
+    padding:1.6rem 1.8rem;
+    transform:rotate(-1.1deg);
+    box-shadow:0 14px 26px rgba(0,0,0,0.35), 0 2px 0 rgba(0,0,0,0.15);
+    max-width:480px;
+    margin:1.6rem auto 0;
+    position:relative;
+  }
+  .sticky::before{
+    content:"";
+    position:absolute;
+    top:-10px;left:50%;
+    width:64px;height:20px;
+    background:rgba(212,175,106,0.55);
+    transform:translateX(-50%) rotate(-2deg);
+    border-radius:2px;
+  }
+  .sticky h3{
+    font-family:'Fraunces',serif;
+    margin:0 0 0.7rem;
+    font-size:1.05rem;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+  }
+  .sticky ul{margin:0;padding-left:1.1rem;font-size:0.96rem;}
+  .sticky li{margin-bottom:0.45rem;}
+
+  /* ---------- Arbre pondéré (SVG interactif) ---------- */
+  .arbre-wrap{
+    background:var(--nuit-2);
+    border-radius:10px;
+    padding:1.6rem;
+    text-align:center;
+  }
+  .arbre-wrap svg{max-width:100%;height:auto;}
+  .branche{cursor:pointer;transition:opacity .2s;}
+  .branche:hover .ligne{stroke:var(--or);stroke-width:3;}
+  .branche .ligne{stroke:var(--texte-doux);stroke-width:2;fill:none;transition:stroke .2s,stroke-width .2s;}
+  .branche text{fill:var(--texte);font-family:'Work Sans',sans-serif;font-size:13px;}
+  .noeud{fill:var(--nuit);stroke:var(--lilas);stroke-width:1.5;}
+  .arbre-note{
+    margin-top:0.8rem;
+    color:var(--texte-doux);
+    font-size:0.85rem;
+  }
+  #resultat{
+    min-height:1.4rem;
+    color:var(--corail);
+    font-weight:600;
+    margin-top:0.6rem;
+  }
+
+  /* ---------- Annotation manuscrite ---------- */
+  .annotation{
+    display:flex;
+    gap:0.9rem;
+    align-items:flex-start;
+    background:transparent;
+    border:1px dashed rgba(183,159,209,0.4);
+    border-radius:8px;
+    padding:1rem 1.2rem;
+    margin-top:1rem;
+  }
+  .annotation .icone{font-size:1.3rem;line-height:1;color:var(--lilas);}
+  .annotation p{
+    margin:0;
+    font-family:'Caveat',cursive;
+    font-size:1.4rem;
+    color:var(--lilas);
+    line-height:1.35;
+  }
+
+  /* ---------- Exemple ---------- */
+  .exemple{
+    background:var(--nuit-2);
+    border-radius:8px;
+    padding:1.4rem 1.6rem;
+  }
+  .exemple .titre-ex{color:var(--corail);font-weight:600;margin-bottom:0.5rem;}
+
+  /* ---------- Quiz ---------- */
+  .quiz-item{
+    background:var(--nuit-2);
+    border-radius:8px;
+    padding:1.2rem 1.4rem;
+    margin-bottom:1rem;
+  }
+  .quiz-item p.question{font-weight:500;margin:0 0 0.8rem;}
+  .options{display:flex;flex-direction:column;gap:0.5rem;}
+  .opt{
+    text-align:left;
+    background:var(--nuit);
+    border:1px solid rgba(169,173,196,0.25);
+    color:var(--texte);
+    padding:0.6rem 0.9rem;
+    border-radius:6px;
+    cursor:pointer;
+    font-family:'Work Sans',sans-serif;
+    font-size:0.94rem;
+    transition:border-color .15s, background .15s;
+  }
+  .opt:hover{border-color:var(--teal);}
+  .opt.correct{border-color:var(--teal);background:rgba(63,169,160,0.15);}
+  .opt.faux{border-color:var(--corail);background:rgba(232,115,95,0.15);}
+
+  footer{
+    text-align:center;
+    padding:2.4rem 6vw 3rem;
+    color:var(--texte-doux);
+    font-size:0.82rem;
+    border-top:1px solid rgba(212,175,106,0.15);
+  }
+  footer b{color:var(--or);}
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="eyebrow">Fiche résumé · Bac Maths</div>
+  <h1>La <em>probabilité conditionnelle</em>, en une page</h1>
+  <p class="sub">L'essentiel du chapitre condensé : la formule, l'arbre pondéré, l'indépendance — et une carte mémo à garder sous les yeux avant l'épreuve.</p>
+  <div class="meta-row">
+    <span>Chapitre <b>Probabilités</b></span>
+    <span>Niveau <b>4ème Sc. / Bac Maths</b></span>
+    <span>Temps de lecture <b>~6 min</b></span>
+  </div>
+</div>
+
+<main>
+
+  <section>
+    <h2><span class="num">01</span> Définition</h2>
+    <div class="def">
+      <p>Soit A et B deux événements d'un même univers, avec P(A) ≠ 0. La probabilité de B <em>sachant</em> que A est réalisé se note P<sub>A</sub>(B) et se lit « probabilité de B sachant A ».</p>
+      <div class="formule">P<sub>A</sub>(B) = P(A ∩ B) / P(A)</div>
+      <p class="cond">valable uniquement si P(A) &gt; 0</p>
+    </div>
+    <div class="annotation">
+      <span class="icone">✎</span>
+      <p>on divise toujours par la probabilité de l'événement qu'on suppose déjà réalisé !</p>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="num">02</span> L'arbre pondéré — cliquez sur une branche</h2>
+    <div class="arbre-wrap">
+      <svg viewBox="0 0 640 260" xmlns="http://www.w3.org/2000/svg">
+        <circle class="noeud" cx="60" cy="130" r="6"></circle>
+
+        <g class="branche" data-res="P(A) × P_A(B) = P(A ∩ B)">
+          <path class="ligne" d="M60,130 L280,60"></path>
+          <text x="150" y="82">P(A)</text>
+        </g>
+        <g class="branche" data-res="P(A) × P_A(B̄) = P(A ∩ B̄)">
+          <path class="ligne" d="M60,130 L280,200"></path>
+          <text x="150" y="188">P(Ā)</text>
+        </g>
+
+        <circle class="noeud" cx="280" cy="60" r="5"></circle>
+        <circle class="noeud" cx="280" cy="200" r="5"></circle>
+
+        <g class="branche" data-res="P(A) × P_A(B) = P(A ∩ B)">
+          <path class="ligne" d="M280,60 L520,25"></path>
+          <text x="370" y="35">P_A(B)</text>
+          <text x="530" y="29" fill="#eef0f7">B</text>
+        </g>
+        <g class="branche" data-res="P(A) × P_A(B̄) = P(A ∩ B̄)">
+          <path class="ligne" d="M280,60 L520,95"></path>
+          <text x="370" y="88">P_A(B̄)</text>
+          <text x="530" y="99" fill="#eef0f7">B̄</text>
+        </g>
+        <g class="branche" data-res="P(Ā) × P_Ā(B) = P(Ā ∩ B)">
+          <path class="ligne" d="M280,200 L520,165"></path>
+          <text x="370" y="178">P_Ā(B)</text>
+          <text x="530" y="169" fill="#eef0f7">B</text>
+        </g>
+        <g class="branche" data-res="P(Ā) × P_Ā(B̄) = P(Ā ∩ B̄)">
+          <path class="ligne" d="M280,200 L520,235"></path>
+          <text x="370" y="232">P_Ā(B̄)</text>
+          <text x="530" y="239" fill="#eef0f7">B̄</text>
+        </g>
+      </svg>
+      <p id="resultat">Touchez une branche pour voir la formule associée.</p>
+      <p class="arbre-note">Règle d'or : on <b style="color:var(--or)">multiplie</b> le long d'une branche, on <b style="color:var(--or)">additionne</b> entre les branches menant au même événement final.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="num">03</span> Indépendance</h2>
+    <div class="def">
+      <p>A et B sont indépendants si le fait de savoir que A est réalisé ne change rien à la probabilité de B.</p>
+      <div class="formule">P<sub>A</sub>(B) = P(B) &nbsp;&nbsp;⇔&nbsp;&nbsp; P(A ∩ B) = P(A) × P(B)</div>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="num">04</span> Exemple rapide</h2>
+    <div class="exemple">
+      <p class="titre-ex">Une urne contient 5 boules rouges et 3 boules vertes. On tire 2 boules sans remise.</p>
+      <p>Soit A « la 1ère boule est rouge » et B « la 2ème boule est rouge ».</p>
+      <p>P(A) = 5/8. Sachant A réalisé, il reste 4 rouges sur 7 boules : P<sub>A</sub>(B) = 4/7.</p>
+      <p>Donc P(A ∩ B) = 5/8 × 4/7 = 20/56 = 5/14.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="num">05</span> Mini quiz</h2>
+    <div class="quiz-item">
+      <p class="question">1. Si P(A) = 0,4 et P(A ∩ B) = 0,12, alors P<sub>A</sub>(B) vaut :</p>
+      <div class="options">
+        <button class="opt" data-ok="0">0,048</button>
+        <button class="opt" data-ok="1">0,3</button>
+        <button class="opt" data-ok="0">0,52</button>
+      </div>
+    </div>
+    <div class="quiz-item">
+      <p class="question">2. A et B sont indépendants si :</p>
+      <div class="options">
+        <button class="opt" data-ok="0">A ∩ B = ∅</button>
+        <button class="opt" data-ok="1">P(A ∩ B) = P(A) × P(B)</button>
+        <button class="opt" data-ok="0">P(A) = P(B)</button>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sticky">
+      <h3>À retenir</h3>
+      <ul>
+        <li>P<sub>A</sub>(B) = P(A ∩ B) / P(A), avec P(A) ≠ 0</li>
+        <li>Sur l'arbre : on multiplie le long d'une branche</li>
+        <li>Indépendance ⇔ P(A ∩ B) = P(A) × P(B)</li>
+        <li>Toujours vérifier que P(A) &gt; 0 avant de diviser</li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  Fiche préparée par <b>Houcine Mokaadi</b> — mingshu-math
+</footer>
+
+<script>
+  document.querySelectorAll('.branche').forEach(function(g){
+    g.addEventListener('click', function(){
+      document.getElementById('resultat').textContent = g.getAttribute('data-res');
+    });
+  });
+  document.querySelectorAll('.quiz-item').forEach(function(item){
+    var opts = item.querySelectorAll('.opt');
+    opts.forEach(function(btn){
+      btn.addEventListener('click', function(){
+        opts.forEach(function(o){o.disabled = true;});
+        opts.forEach(function(o){
+          if(o.getAttribute('data-ok') === '1'){ o.classList.add('correct'); }
+        });
+        if(btn.getAttribute('data-ok') !== '1'){ btn.classList.add('faux'); }
+      });
+    });
+  });
+</script>
+
+</body>
+</html>
